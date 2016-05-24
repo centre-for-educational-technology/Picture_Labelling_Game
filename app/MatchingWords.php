@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Tags extends Model
+class MatchingWords extends Model
 {
-  protected $fillable = array('tag');
+    //
 }

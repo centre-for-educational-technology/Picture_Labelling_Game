@@ -19,6 +19,7 @@ app.controller('TagController', function($scope, $http) {
     $http.get('/labellinggame/api/game').
     success(function(data, status, headers, config) {
       $scope.tags = data.tags;
+      $scope.second_player = data.second_player;
       $scope.pic = data.pic;
       $scope.loading = false;
 
@@ -29,10 +30,17 @@ app.controller('TagController', function($scope, $http) {
     $scope.loading = true;
 
     $http.post('/labellinggame/api/game', {
-      tag: $scope.tag.tag,
-      pic: $scope.pic,
+      tag: $scope.tag,
+      pic: $scope.pic.id,
     }).success(function(data, status, headers, config) {
-      $scope.tags.push(data);
+      if(data.usedTagFlag==true){
+        $scope.usedTagFlag = data.usedTagFlag;
+        $scope.usedTag = data.tag;
+      }else{
+        $scope.tags.push(data.tag);
+        $scope.usedTagFlag = data.usedTagFlag;
+      }
+
       $scope.tag = '';
       $scope.loading = false;
 

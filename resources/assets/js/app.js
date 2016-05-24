@@ -20,6 +20,17 @@ jQuery(document).ready(function($) {
     var id = $('.item.active').data('slide-number');
     $('#carousel-text').html($('#slide-content-'+id).html());
   });
+
+
+  $('#show').on('click',function(){
+    $('.card-reveal').slideToggle('slow');
+  });
+
+  $('.card-reveal .close').on('click',function(){
+    $('.card-reveal').slideToggle('slow');
+  });
 });/**
  * Created by gleb on 05/05/16.
  */
+
+

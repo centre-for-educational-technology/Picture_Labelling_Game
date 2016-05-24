@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Hash;
 
 use Validator;
 
-use App\Pics;
+use App\Pic;
 
 use Intervention\Image\Facades\Image;
 
@@ -448,7 +448,7 @@ class AdminController extends Controller
   public function listPictures()
   {
 
-    $pics = Pics::all();
+    $pics = Pic::all();
 
 
     return view('admin.pics')
@@ -486,7 +486,7 @@ class AdminController extends Controller
 
 
 
-        $img_record = new Pics;
+        $img_record = new Pic;
 
         $img_record->filename = $fileName;
 
@@ -512,7 +512,7 @@ class AdminController extends Controller
 
   public function deletePic($id)
   {
-    Pics::destroy($id);
+    Pic::destroy($id);
 
     return Redirect::to('/admin/pictures');
   }

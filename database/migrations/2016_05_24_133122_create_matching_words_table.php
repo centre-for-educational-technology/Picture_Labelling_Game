@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateGameSessionTable extends Migration
+class CreateMatchingWordsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,11 +12,12 @@ class CreateGameSessionTable extends Migration
      */
     public function up()
     {
-        Schema::create('game_session', function (Blueprint $table) {
+        Schema::create('matching_words', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('user_id');
-            $table->integer('picture_id');
+            $table->integer('pic_id');
             $table->integer('tag_id');
+            $table->integer('first_user_id');
+            $table->integer('second_user_id');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateGameSessionTable extends Migration
      */
     public function down()
     {
-        Schema::drop('game_session');
+        Schema::drop('matching_words');
     }
 }

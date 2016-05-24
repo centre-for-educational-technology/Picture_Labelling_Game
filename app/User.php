@@ -4,6 +4,8 @@ namespace App;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
+
+
 class User extends Authenticatable
 {
     /**
@@ -30,8 +32,11 @@ class User extends Authenticatable
         return "http://www.gravatar.com/avatar/$hash";
     }
 
-    public function gameSessions() {
-        return $this->hasMany('GameSession');
+
+
+    public function gameSessions()
+    {
+        return $this->hasMany('App\GameSession');
     }
 
 }

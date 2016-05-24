@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\GameSession;
-use App\Pics;
+use App\Pic;
+use App\User;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
-use App\Tags;
+use App\Tag;
 use Illuminate\Support\Facades\Auth;
+
 
 
 class GameController extends Controller
@@ -21,13 +23,80 @@ class GameController extends Controller
    */
   public function index() {
 
-    $tags = Tags::all();
 
-    $pic = Pics::orderByRaw("RAND()")->first();
+    $tags = Tag::all();
+
+    $user = Auth::user();
 
 
 
-    return array('tags' => $tags, 'pic' => array('id'=> $pic->id, 'url'=> asset('pictures/'.$pic->filename)));
+
+//    $pic = Pic::orderByRaw("RAND()")->first();
+
+    $pic = Pic::where('id', '=', 13)->first();
+
+
+
+    $mySessionsForThatPicture = $user->gameSessions()->where('pic_id', $pic->id)->get();
+
+    $myTags = array();
+
+    if ($mySessionsForThatPicture!=null){
+
+      $tagIds = array();
+
+      foreach ($mySessionsForThatPicture as $mySessionForThatPicture) {
+        array_push($tagIds, $mySessionForThatPicture->tag->id);
+
+      }
+
+      $myTags = Tag::find($tagIds);
+    }
+
+
+
+
+    //Take random session for that picture and not by me
+    $secondPlayerRandomSession = GameSession::where('pic_id', '=', $pic->id)->where('user_id', '<>', Auth::user()->id)->distinct()->orderByRaw("RAND()")->first();
+
+
+
+    $secondPlayerName = "";
+
+    //Second player found
+    if ($secondPlayerRandomSession!=null){
+
+
+      $secondPlayerName = $secondPlayerRandomSession->user->name;
+
+      \Debugbar::info($secondPlayerName);
+
+      //Get all tags from that user for that picture
+      $secondPlayerSessionsForThatPicture = GameSession::where('pic_id', '=', $pic->id)->where('user_id', '=', $secondPlayerRandomSession->user->id)->get();
+
+
+      $secondPlayerTags = array();
+
+      foreach ($secondPlayerSessionsForThatPicture as $secondPlayerSessionForThatPicture) {
+        $secondPlayerTags[$secondPlayerSessionForThatPicture->tag_id] = Tag::find($secondPlayerSessionForThatPicture->tag_id)->tag;
+
+      }
+    }else{
+
+      $secondPlayerName = "you are the first one to tag this picture";
+    }
+
+
+
+
+
+
+//
+////    \Debugbar::info(Auth::user()->id);
+    \Debugbar::info($secondPlayerTags);
+
+
+    return array('tags' => $myTags, 'second_player' => $secondPlayerName, 'pic' => array('id'=> $pic->id, 'url'=> asset('pictures/'.$pic->filename)));
 
 
   }
@@ -38,20 +107,52 @@ class GameController extends Controller
    * @return Response
    */
   public function store(Request $request) {
-    $tag = Tags::create($request->input('tag'));
 
-    Pics::where('email', Input::get('email'))
-        ->orWhere('name', 'like', '%' . Input::get('name') . '%')->get();
-    
-    
+
+    //To lower case and remove spaces
+    $input_tag = str_replace(' ', '-', strtolower($request->input('tag')['tag']));
+
+    \Debugbar::info($input_tag);
+
+    $similar_tag = Tag::where('tag', 'like', '%' . $input_tag . '%')->first();
+
+    $usedTagFlag=false;
+
+    if(!empty($similar_tag)){
+      $tag = $similar_tag;
+
+
+
+      //Check if this user already used this tag for this picture
+      $usedTag = GameSession::where('tag_id', '=', $similar_tag->id)->where('user_id', '=', Auth::user()->id)->where('pic_id', '=', $request->input('pic'))->first();
+
+      if($usedTag!=null){
+        $usedTagFlag = true;
+      }
+
+    }else {
+      $tag = Tag::create(array(
+          'tag' => $input_tag,
+      ));
+      $usedTagFlag=false;
+    }
+
+
+
+
+
     $gameSession = GameSession::create(array(
         'user_id' => Auth::user()->id,
-        'picture_id' => $request->input('pic'),
-        'tag_id' => 1
+        'pic_id' => $request->input('pic'),
+        'tag_id' => $tag->id,
     ));
 
 
-    return $tag;
+    $gameSession->save();
+
+
+
+    return array('tag' => $tag, 'usedTagFlag' => $usedTagFlag);
   }
 
   /**
@@ -61,7 +162,7 @@ class GameController extends Controller
    * @return Response
    */
   public function update(Request $request, $id) {
-    $tag = Tags::find($id);
+    $tag = Tag::find($id);
     $tag->tag = $request->input('tag');
     $tag->save();
 
@@ -75,6 +176,9 @@ class GameController extends Controller
    * @return Response
    */
   public function destroy($id) {
-    Tags::destroy($id);
+    Tag::destroy($id);
+
+    GameSession::where('tag_id', '=', $id)->delete();
+
   }
 }

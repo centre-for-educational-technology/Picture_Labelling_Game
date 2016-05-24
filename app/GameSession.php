@@ -8,18 +8,21 @@ class GameSession extends Model
 {
     //
 
-  protected $fillable = array('user_id', 'picture_id', 'tag_id');
+  protected $fillable = array('user_id', 'pic_id', 'tag_id');
 
 
-  public function gamer() {
-    return $this->belongsTo('User');
+
+
+  public function user()
+  {
+    return $this->belongsTo('App\User');
   }
 
   public function picture() {
-    return $this->belongsTo('Picture');
+    return $this->belongsTo('App\Pic');
   }
 
-  public function tags() {
-    return $this->hasMany('Tag');
+  public function tag() {
+    return $this->belongsTo('App\Tag');
   }
 }
