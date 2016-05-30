@@ -8,7 +8,7 @@ class GameSession extends Model
 {
     //
 
-  protected $fillable = array('user_id', 'pic_id', 'tag_id');
+  protected $fillable = array('user_id', 'competitor_session_id', 'pic_id');
 
 
 
@@ -22,7 +22,8 @@ class GameSession extends Model
     return $this->belongsTo('App\Pic');
   }
 
-  public function tag() {
-    return $this->belongsTo('App\Tag');
+  public function tags() {
+    return $this->hasMany('App\TaggingStamp');
   }
+
 }

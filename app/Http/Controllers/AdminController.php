@@ -478,7 +478,7 @@ class AdminController extends Controller
 
         $img = Image::make(Input::file('image'));
         // resize the image to a width of 500 and constrain aspect ratio (auto height)
-        $img->resize(500, null, function ($constraint) {
+        $img->resize(700, null, function ($constraint) {
           $constraint->aspectRatio();
         });
 

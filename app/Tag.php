@@ -10,6 +10,6 @@ class Tag extends Model
 
   public function gameSessions()
   {
-    return $this->hasMany('App\GameSession');
+    return $this->hasMany('App\TaggingStamp');
   }
 }

@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class UpdateUsersTable extends Migration
+class CreateMatchingWordsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -12,8 +12,11 @@ class UpdateUsersTable extends Migration
      */
     public function up()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->integer('role_id')->nullable()->after('id')->references('id')->on('roles');
+        Schema::create('matching_words', function (Blueprint $table) {
+            $table->increments('id');
+            $table->integer('tagging_stamp_id');
+            $table->integer('game_session_id');
+            $table->timestamps();
         });
     }
 
@@ -24,8 +27,6 @@ class UpdateUsersTable extends Migration
      */
     public function down()
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role_id');
-        });
+        Schema::drop('matching_words');
     }
 }

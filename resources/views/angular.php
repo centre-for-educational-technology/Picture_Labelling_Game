@@ -4,10 +4,7 @@
 
 
 
-    <div class="alert alert-warning alert-dismissible" ng-show="usedTagFlag" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-        You have already used this tag: <strong><% usedTag.tag %></strong>
-    </div>
+
 
     <div class="container-fluid">
       <div class="row">
@@ -22,10 +19,25 @@
           </div>
         </div>
       </div>
+
     </div>
     <div class="row">
+      <div class="col-sm-12">
+        <div class="alert alert-warning alert-dismissible" ng-show="used_tag_flag" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          You have already used this tag: <strong><% used_tag.tag %></strong>
+        </div>
+
+        <div class="alert alert-warning alert-dismissible" ng-show="in_taboo_list_flag" role="alert">
+          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          This tag is in the taboo list: <strong><% taboo_tag %></strong>
+        </div>
+      </div>
+
+
 
       <div class="col-sm-6">
+
 
               <div class="well well-lg">Your competitor: <% second_player %></div>
               <div class="panel panel-danger">
@@ -34,11 +46,11 @@
 
                 <!-- List group -->
                 <ul class="list-group">
-                  <li class="list-group-item">Cras justo odio</li>
-                  <li class="list-group-item">Dapibus ac facilisis in</li>
-                  <li class="list-group-item">Morbi leo risus</li>
-                  <li class="list-group-item">Porta ac consectetur ac</li>
-                  <li class="list-group-item">Vestibulum at eros</li>
+                  <li class="list-group-item" ng-repeat='matching_word in matching_words' ng-class="{'list-group-item-warning': matching_word == taboo_tag}">
+                    <% matching_word %>
+                  </li>
+                  
+         
                 </ul>
               </div>
 

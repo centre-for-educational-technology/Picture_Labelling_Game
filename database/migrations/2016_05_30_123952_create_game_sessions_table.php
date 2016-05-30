@@ -15,8 +15,8 @@ class CreateGameSessionsTable extends Migration
         Schema::create('game_sessions', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
+            $table->integer('competitor_session_id')->nullable();
             $table->integer('pic_id');
-            $table->integer('tag_id');
             $table->timestamps();
         });
     }

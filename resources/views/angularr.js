@@ -11,6 +11,10 @@ app.controller('TagController', function($scope, $http) {
 
   $scope.tags = [];
   $scope.picture = [];
+
+  $scope.matching_words = [];
+
+  $scope.taboo_tag = '';
   
   $scope.loading = false;
 
@@ -18,13 +22,14 @@ app.controller('TagController', function($scope, $http) {
     $scope.loading = true;
     $http.get('/labellinggame/api/game').
     success(function(data, status, headers, config) {
-      $scope.tags = data.tags;
+      $scope.my_session_id = data.my_session_id;
       $scope.second_player = data.second_player;
+      $scope.matching_words = data.matching_words_list;
       $scope.pic = data.pic;
       $scope.loading = false;
 
     });
-  }
+  };
 
   $scope.addTag = function() {
     $scope.loading = true;
@@ -32,14 +37,29 @@ app.controller('TagController', function($scope, $http) {
     $http.post('/labellinggame/api/game', {
       tag: $scope.tag,
       pic: $scope.pic.id,
+      my_session_id: $scope.my_session_id
     }).success(function(data, status, headers, config) {
-      if(data.usedTagFlag==true){
-        $scope.usedTagFlag = data.usedTagFlag;
-        $scope.usedTag = data.tag;
-      }else{
-        $scope.tags.push(data.tag);
-        $scope.usedTagFlag = data.usedTagFlag;
+      //In taboo list case
+      if (data.inTabooListFlag == true){
+        $scope.in_taboo_list_flag = data.inTabooListFlag;
+        $scope.taboo_tag = data.tag;
+      } else{
+        //Already used tag in this session case
+        if(data.usedTagFlag == true){
+          $scope.used_tag_flag = data.usedTagFlag;
+          $scope.used_tag = data.tag;
+
+        }else{
+          //New matching case
+          if(data.matchingWordAddedFlag == true){
+            $scope.matching_words.push(data.tag.tag);
+          }
+          $scope.tags.push(data.tag);
+
+        }
       }
+
+
 
       $scope.tag = '';
       $scope.loading = false;
@@ -64,9 +84,12 @@ app.controller('TagController', function($scope, $http) {
 
     var tag = $scope.tags[index];
 
-    $http.delete('/labellinggame/api/game/' + tag.id)
+    $http.delete('/labellinggame/api/game/' + tag.id, {
+      my_session_id: $scope.my_session_id
+    })
       .success(function() {
         $scope.tags.splice(index, 1);
+        $scope.matching_words.splice(index, 1);
         $scope.loading = false;
 
       });
