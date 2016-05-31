@@ -1,5 +1,6 @@
 jQuery(document).ready(function($) {
 
+
   $('#myCarousel').carousel({
     interval: 5000
   });
@@ -29,6 +30,8 @@ jQuery(document).ready(function($) {
   $('.card-reveal .close').on('click',function(){
     $('.card-reveal').slideToggle('slow');
   });
+
+
 });/**
  * Created by gleb on 05/05/16.
  */

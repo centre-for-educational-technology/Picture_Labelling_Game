@@ -282,7 +282,7 @@ class GameController extends Controller
 
     //Get my session
     $mySession = GameSession::find($request->input('my_session_id'));
-    \Debugbar::info($request->input('my_session_id'));
+
 
     $taggingStamp = TaggingStamp::where('tag_id', '=', $id)->where('game_session_id', '=', $mySession->id)->first();
 
@@ -290,13 +290,17 @@ class GameController extends Controller
 
     $matchingWord = MatchingWord::where('tagging_stamp_id', '=', $taggingStamp->id)->first();
 
-    \Debugbar::info($matchingWord);
+
+    $deleteFromMatchingWordsFlag = false;
 
     if($matchingWord != null){
       $matchingWord->delete();
+      $deleteFromMatchingWordsFlag = true;
     }
 
     $taggingStamp->delete();
+
+    return array('deleteFromMatchingWordsFlag' => $deleteFromMatchingWordsFlag);
 
   }
 }

@@ -1,13 +1,19 @@
 /**
  * Created by gleb on 18/04/16.
  */
-var app = angular.module('gameApp', [], function($interpolateProvider) {
+
+
+
+
+var app = angular.module('gameApp', ['ui-notification'], function($interpolateProvider) {
   $interpolateProvider.startSymbol('<%');
   $interpolateProvider.endSymbol('%>');
 });
 
 
-app.controller('TagController', function($scope, $http) {
+
+
+app.controller('TagController', function($scope, $http, Notification) {
 
   $scope.tags = [];
   $scope.picture = [];
@@ -22,6 +28,7 @@ app.controller('TagController', function($scope, $http) {
     $scope.loading = true;
     $http.get('/labellinggame/api/game').
     success(function(data, status, headers, config) {
+      Notification.error({message: 'Error notification 1s', delay: 1000});
       $scope.my_session_id = data.my_session_id;
       $scope.second_player = data.second_player;
       $scope.matching_words = data.matching_words_list;
@@ -84,12 +91,14 @@ app.controller('TagController', function($scope, $http) {
 
     var tag = $scope.tags[index];
 
-    $http.delete('/labellinggame/api/game/' + tag.id, {
-      my_session_id: $scope.my_session_id
-    })
-      .success(function() {
+    $http.delete('/labellinggame/api/game/' + tag.id, {params: {my_session_id: $scope.my_session_id}})
+      .success(function(data, status, headers, config) {
         $scope.tags.splice(index, 1);
-        $scope.matching_words.splice(index, 1);
+
+        if(data.deleteFromMatchingWordsFlag == true){
+          $scope.matching_words.splice(index, 1);
+        }
+
         $scope.loading = false;
 
       });

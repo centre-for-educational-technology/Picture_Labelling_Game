@@ -1,4 +1,5 @@
 var elixir = require('laravel-elixir');
+var gulp = require('gulp');
 
 /*
  |--------------------------------------------------------------------------
@@ -12,16 +13,29 @@ var elixir = require('laravel-elixir');
  */
 
 
+gulp.task("copyfiles", function() {
+
+
+  gulp.src("bower_components/angular-ui-notification/dist/angular-ui-notification.js")
+      .pipe(gulp.dest("resources/assets/js/"));
+
+
+
+  gulp.src("bower_components/angular-ui-notification/dist/angular-ui-notification.css")
+    .pipe(gulp.dest("resources/assets/sass/"))
+});
+
+
+
 elixir(function(mix) {
 
 
-    mix.sass([
-          'app.scss'
-      ])
+    mix.sass('app.scss')
       .scripts([
-          'app.js'
-      ])
+          'app.js',
+          'angular-ui-notification.js']
+      )
 
-      .version(['public/css/app.css','public/js/app.js']);
+      .version(['css/app.css','js/all.js']);
 });
 
