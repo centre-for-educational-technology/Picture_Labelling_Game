@@ -1,6 +1,10 @@
 // @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 
-@import "angular-ui-notification";
+//@import "angular-ui-notification";
+
+@import "ngToast";
+
+@import "ngToast-animations";
 
 .glyphicon {  margin-bottom: 10px;margin-right: 10px;}
 

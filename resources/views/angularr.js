@@ -5,15 +5,20 @@
 
 
 
-var app = angular.module('gameApp', ['ui-notification'], function($interpolateProvider) {
+var app = angular.module('gameApp', ['ngAnimate', 'ngSanitize', 'ngToast'], function($interpolateProvider) {
   $interpolateProvider.startSymbol('<%');
   $interpolateProvider.endSymbol('%>');
 });
 
+app.config(['ngToastProvider', function(ngToastProvider) {
+  ngToastProvider.configure({
+    animation: 'slide' // or 'fade'
+  });
+}]);
 
 
+app.controller('TagController', function($scope, $http, ngToast, $animate) {
 
-app.controller('TagController', function($scope, $http, Notification) {
 
   $scope.tags = [];
   $scope.picture = [];
@@ -24,11 +29,17 @@ app.controller('TagController', function($scope, $http, Notification) {
   
   $scope.loading = false;
 
+  var spinner = document.getElementById('my_spinner');
+
+  console.log(spinner);
+
+  $animate.enabled(spinner, false);
+
   $scope.init = function() {
-    $scope.loading = true;
+
     $http.get('/labellinggame/api/game').
     success(function(data, status, headers, config) {
-      Notification.error({message: 'Error notification 1s', delay: 1000});
+      // Notification.error({message: 'Error notification 1s', delay: 1000});
       $scope.my_session_id = data.my_session_id;
       $scope.second_player = data.second_player;
       $scope.matching_words = data.matching_words_list;
@@ -46,30 +57,42 @@ app.controller('TagController', function($scope, $http, Notification) {
       pic: $scope.pic.id,
       my_session_id: $scope.my_session_id
     }).success(function(data, status, headers, config) {
+
+
       //In taboo list case
       if (data.inTabooListFlag == true){
-        $scope.in_taboo_list_flag = data.inTabooListFlag;
         $scope.taboo_tag = data.tag;
+        ngToast.create({
+          className: 'warning',
+          content: 'This word is in taboo list: ' + data.tag
+        });
       } else{
         //Already used tag in this session case
         if(data.usedTagFlag == true){
-          $scope.used_tag_flag = data.usedTagFlag;
           $scope.used_tag = data.tag;
+          ngToast.create({
+            className: 'warning',
+            content: 'You have already used this tag: ' + data.tag.tag
+          });
 
         }else{
           //New matching case
           if(data.matchingWordAddedFlag == true){
             $scope.matching_words.push(data.tag.tag);
+            ngToast.create({
+              className: 'success',
+              content: 'You got a new match!'
+            });
           }
           $scope.tags.push(data.tag);
 
         }
       }
 
-
+      $scope.loading = false;
 
       $scope.tag = '';
-      $scope.loading = false;
+
 
     });
   };

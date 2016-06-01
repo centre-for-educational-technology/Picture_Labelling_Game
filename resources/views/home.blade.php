@@ -31,23 +31,6 @@
 
 @section('content')
 
+    @include('angular')
 
-<div class="container">
-    <div class="row">
-
-            <div class="jumbotron">
-                <div class="container">
-
-
-
-                    @include('angular')
-                </div>
-
-
-
-            </div>
-
-
-    </div>
-</div>
 @endsection

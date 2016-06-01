@@ -1,5 +1,13 @@
 <?php // I AM A FAKER ?>
+
+
 <div ng-app="gameApp" ng-controller="TagController">
+  <toast></toast>
+  <div class="container">
+    <div class="row">
+
+      <div class="jumbotron">
+        <div class="container">
 
 
 
@@ -25,17 +33,7 @@
 
     </div>
     <div class="row">
-      <div class="col-sm-12">
-        <div class="alert alert-warning alert-dismissible" ng-show="used_tag_flag" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          You have already used this tag: <strong><% used_tag.tag %></strong>
-        </div>
 
-        <div class="alert alert-warning alert-dismissible" ng-show="in_taboo_list_flag" role="alert">
-          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-          This tag is in the taboo list: <strong><% taboo_tag %></strong>
-        </div>
-      </div>
 
 
 
@@ -68,7 +66,7 @@
                     </span>
 
               </div><!-- /input-group -->
-              <i ng-show="loading" class="fa fa-spinner fa-spin"></i>
+              <i ng-show="loading" class="fa fa-spinner fa-spin" id="my_spinner"></i>
 
 
 
@@ -102,5 +100,14 @@
     </div>
 
 
+        </div>
+
+
+
+      </div>
+
+
+    </div>
+  </div>
 
 </div>
