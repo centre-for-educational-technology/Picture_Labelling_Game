@@ -64,7 +64,7 @@ class GameController extends Controller
     $secondPlayerName = "";
 
     //Second player found
-    if ($secondPlayerRandomSession!=null){
+    if ($secondPlayerRandomSession!=null && sizeof($secondPlayerRandomSession)>0){
 
 
       $secondPlayerName = $secondPlayerRandomSession->user->name;
@@ -183,7 +183,7 @@ class GameController extends Controller
     $mySession = GameSession::find($request->input('my_session_id'));
 
 
-    if(!empty($similar_tag)){
+    if($similar_tag != null && sizeof($similar_tag)>0){
       $tag = $similar_tag;
 
 
@@ -293,7 +293,7 @@ class GameController extends Controller
 
     $deleteFromMatchingWordsFlag = false;
 
-    if($matchingWord != null){
+    if($matchingWord != null && sizeof($matchingWord)>0){
       $matchingWord->delete();
       $deleteFromMatchingWordsFlag = true;
     }

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\GameSession;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 
 use App\User;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 use Illuminate\Support\Facades\Input;
@@ -436,6 +438,85 @@ class AdminController extends Controller
     User::destroy($id);
 
     return Redirect::to('/admin');
+  }
+
+
+  /*
+   * Stats management
+   */
+
+
+  public function stats()
+  {
+
+
+
+    $pics = Pic::all();
+
+
+    return view('admin.stats')
+        ->with('pics', $pics);
+
+  }
+
+
+  public function getStats(){
+
+
+    $date = date('d-m-Y_h-i-s-a', time());
+
+    $fileText = "The output goes in form: picture filename; game session start; game session id; player1 id; 
+    player2 id; player1 tags; player1 tags timestamps; player 2 tags; player 2 timestamps; game session end\n\n";
+
+    $pics = Pic::all();
+
+    foreach ($pics as $pic){
+      $gameSessions = $pic->gameSessions;
+
+      foreach ($gameSessions as $gameSession){
+        $fileText .= $pic->filename."; ".$gameSession->created_at."; ".$gameSession->id."; ".$gameSession->user->id."; ";
+
+
+        if($gameSession->competitor_session_id != null){
+          //Get competitor session
+          $competitorSession = GameSession::find($gameSession->competitor_session_id);
+
+          $fileText .= $competitorSession->user->id;
+        }
+
+
+        $tagStamps = $gameSession->tags;
+
+
+        //Player 1 tags
+        foreach ($tagStamps as $tagStamp){
+          $fileText .= $tagStamp->tag->tag."; ".$tagStamp->created_at."; ";
+        }
+
+        //Player 2 tags
+        if(isset($competitorSession))
+        {
+          $competitorTagStamps = $competitorSession->tags;
+          foreach ($competitorTagStamps as $competitorTagStamp){
+            $fileText .= $competitorTagStamps->tag->tag."; ".$competitorTagStamps->created_at."; ";
+          }
+        }
+
+        $fileText .= $gameSession->updated_at.";\n";
+      }
+    }
+
+
+
+
+
+
+
+
+
+    $myName = "PictureLabellingGameStats_".$date.".txt";
+    $headers = ['Content-type'=>'text/plain', 'Author'=>Auth::user()->name, 'Content-Disposition'=>sprintf('attachment; filename="%s"', $myName), 'Content-Length'=>sizeof($fileText)];
+    return \Response::make($fileText, 200, $headers);
   }
 
 

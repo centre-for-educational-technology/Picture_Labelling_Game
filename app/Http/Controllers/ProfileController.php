@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\GameSession;
+use App\MatchingWord;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -28,8 +30,76 @@ class ProfileController extends Controller
   public function user()
   {
 
+    $user = Auth::user();
+
+    $myGameSessions = $user->gameSessions;
+
+
+
+    $myGameSessionsIds = array();
+
+    foreach ($myGameSessions as $myGameSession){
+      array_push($myGameSessionsIds, $myGameSession->id);
+    }
+
+
+
+    $matches = MatchingWord::whereIn('game_session_id', $myGameSessionsIds)->get();
+
+
+
+    $matches_array = array();
+
+    if ($matches != null && sizeof($matches) > 0){
+      foreach ($matches as $match){
+        $competitor = GameSession::find($match->gameSession->competitor_session_id)->user->name;
+        $tag = $match->taggingStamp->tag->tag;
+        $time = $match->taggingStamp->created_at->toDayDateTimeString();
+
+        array_push($matches_array, [$competitor, $tag, $time]);
+
+      }
+    }
+
+
+
+    //Game sessions where i was a competitor
+
+    $gameSessionsWhereICompetitor = GameSession::whereIn('competitor_session_id', $myGameSessionsIds)->get();
+
+    \Debugbar::info($gameSessionsWhereICompetitor);
+
+    $gameSessionsWhereICompetitorIds = array();
+
+    foreach ($gameSessionsWhereICompetitor as $gameSessionWhereICompetitor){
+      array_push($gameSessionsWhereICompetitorIds, $gameSessionWhereICompetitor->id);
+    }
+
+    $gameSessionsWhereICompetitorMatches = MatchingWord::whereIn('game_session_id', $gameSessionsWhereICompetitorIds)->get();
+
+    $gameSessionsWhereICompetitorMatches_array = array();
+
+    if ($gameSessionsWhereICompetitorMatches != null && sizeof($gameSessionsWhereICompetitorMatches) > 0){
+      foreach ($gameSessionsWhereICompetitorMatches as $gameSessionsWhereICompetitorMatch){
+
+
+        $competitor = GameSession::find($gameSessionsWhereICompetitorMatch->gameSession->competitor_session_id)->user->name;
+        $tag = $gameSessionsWhereICompetitorMatch->taggingStamp->tag->tag;
+        $time = $gameSessionsWhereICompetitorMatch->taggingStamp->created_at->toDayDateTimeString();
+
+        array_push($gameSessionsWhereICompetitorMatches_array, [$competitor, $tag, $time]);
+
+      }
+    }
+
+
+
+
+
+
     return view('profile.user')
-        ->with('user', Auth::user());
+        ->with('user', Auth::user())->with('my_matches', $matches_array)->with('others_matches', $gameSessionsWhereICompetitorMatches_array);
+
 
   }
 

@@ -69,7 +69,9 @@ Route::post('/admin/{id}/edit', 'AdminController@update');
 
 Route::post('/admin/create', 'AdminController@store');
 
+Route::get('/admin/stats','AdminController@stats');
 
+Route::post('/admin/stats', 'AdminController@getStats');
 
 Route::get('/admin/pictures','AdminController@listPictures');
 
