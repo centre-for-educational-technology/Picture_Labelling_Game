@@ -13,7 +13,7 @@
         @endif
         @include('flash::message')
 
-        <h1><i class='fa fa-user'></i> Add User</h1>
+        <h1><span class='glyphicon glyphicon-user'></span> Add User</h1>
 
             <form class="form-horizontal" role="form" method="POST" action="{{ url('/admin') }}">
                 {!! csrf_field() !!}
@@ -94,7 +94,7 @@
                 <div class="form-group">
                     <div class="col-md-6 col-md-offset-4">
                         <button type="submit" class="btn btn-primary">
-                            <i class="fa fa-btn fa-user"></i>Register
+                            <span class="glyphicon glyphicon-user"></span>Register
                         </button>
                     </div>
                 </div>

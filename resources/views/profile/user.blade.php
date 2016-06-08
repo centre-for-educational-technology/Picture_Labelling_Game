@@ -18,7 +18,7 @@
                                     <h2>{{ $user->name }} <span class="label label-info">User</span></h2>
                                 @endif
 
-                                <i class="glyphicon glyphicon-envelope"></i>{{ $user->email }}
+                                <span class="glyphicon glyphicon-envelope"></span>{{ $user->email }}
 
                                     <h3><span class="label label-primary">Personal score: <span class="badge">{{ count($my_matches)+count($others_matches) }}</span></span></h3>
 

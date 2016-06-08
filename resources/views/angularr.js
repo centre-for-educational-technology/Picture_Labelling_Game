@@ -17,7 +17,8 @@ app.config(['ngToastProvider', function(ngToastProvider) {
 }]);
 
 
-app.controller('TagController', function($scope, $http, ngToast, $animate) {
+
+app.controller('TagController', function($scope, $http, ngToast, $animate, $window) {
 
 
   $scope.tags = [];
@@ -125,6 +126,10 @@ app.controller('TagController', function($scope, $http, ngToast, $animate) {
         $scope.loading = false;
 
       });
+  };
+
+  $scope.reloadRoute = function() {
+    $window.location.reload();
   };
 
 

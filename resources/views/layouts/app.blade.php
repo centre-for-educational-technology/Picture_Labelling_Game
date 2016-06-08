@@ -29,7 +29,7 @@
 
 </head>
 <body id="app-layout">
-    <nav class="navbar navbar-default navbar-static-top">
+    <nav class="navbar navbar-inverse navbar-static-top">
         <div class="container">
             <div class="navbar-header">
 
@@ -43,14 +43,14 @@
 
                 <!-- Branding Image -->
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    Picture Labelling Game
+                    <span class="glyphicon glyphicon-tags"></span> Picture Labelling Game
                 </a>
             </div>
 
             <div class="collapse navbar-collapse" id="app-navbar-collapse">
                 <!-- Left Side Of Navbar -->
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url('/home') }}">Home</a></li>
+                    <li><a href="{{ url('/home') }}">Play!</a></li>
                 </ul>
 
                 <!-- Right Side Of Navbar -->
@@ -66,13 +66,14 @@
                             </a>
 
                             <ul class="dropdown-menu" role="menu">
-                                <li><a href="{{ url('user/') }}"><i class="fa fa-btn fa-user"></i>View Profile</a></li>
+                                <li><a href="{{ url('user/') }}"><span class="glyphicon glyphicon-user"></span>View Profile</a></li>
                                 @if (Auth::user()->role_id == 1)
-                                    <li><a href="{{ url('admin') }}"><i class="fa fa-btn fa-dashboard"></i>Admin Panel</a></li>
-                                    <li><a href="{{ url('admin/pictures') }}"><i class="fa fa-btn fa-upload"></i>Upload Picture</a></li>
+                                    <li><a href="{{ url('admin') }}"><span class="glyphicon glyphicon-dashboard"></span>Admin Panel</a></li>
+                                    <li><a href="{{ url('admin/pictures') }}"><span class="glyphicon glyphicon-upload"></span>Upload Picture</a></li>
+                                    <li><a href="{{ url('admin/stats') }}"><span class="glyphicon glyphicon-stats"></span>Get Statistics</a></li>
                                 @endif
-                                <li><a href="{{ url('user/edit') }}"><i class="fa fa-btn fa-pencil"></i>Edit Profile</a></li>
-                                <li><a href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Logout</a></li>
+                                <li><a href="{{ url('user/edit') }}"><span class="glyphicon glyphicon-pencil"></span>Edit Profile</a></li>
+                                <li><a href="{{ url('/logout') }}"><span class="glyphicon glyphicon-log-out"></span>Logout</a></li>
                             </ul>
                         </li>
                     @endif

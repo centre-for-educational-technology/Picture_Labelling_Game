@@ -51,7 +51,7 @@
 
 
             @include('flash::message')
-            <h1><i class='fa fa-user'></i> Edit User</h1>
+            <h1><span class='glyphicon glyphicon-user'></span> Edit User</h1>
 
             <form class="form-horizontal" role="form" action="{{ url('/admin/'.$user->id.'/edit') }}" method="POST">
                 {!! csrf_field() !!}

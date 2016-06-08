@@ -200,6 +200,9 @@
   margin-bottom: 10px;
   margin-right: 10px; }
 
+body {
+  background-image: url("../bg/1.jpg"); }
+
 small {
   display: block;
   line-height: 1.428571429;

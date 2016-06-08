@@ -6,7 +6,7 @@
 
     <div class="col-lg-10 col-lg-offset-1">
 
-        <h1><i class="fa fa-users"></i> User Administration</h1>
+        <h1><span class="glyphicon glyphicon-user"></span> User Administration</h1>
 
         <div class="table-responsive">
             <table class="table table-bordered table-striped">

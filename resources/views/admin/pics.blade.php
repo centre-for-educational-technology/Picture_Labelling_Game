@@ -17,7 +17,7 @@
                 @endforeach
             @endif
 
-            <h1><i class='fa fa-upload'></i> Upload a picture</h1>
+            <h1><span class='glyphicon glyphicon-upload'></span> Upload a picture</h1>
 
                     {!! Form::open(array('url'=>'admin/pictures','method'=>'POST', 'files'=>true)) !!}
                     <div class="control-group">
@@ -40,7 +40,7 @@
 
                 @foreach ($pics->all() as $key=>$pic)
                     <li class="col-sm-3">
-                        <a class="thumbnail" id="carousel-selector-{{ ++$key }}">
+                        <a class="thumbnail" id="carousel-selector-{{ $key++ }}">
                             <img src="{{ url('pictures/'.$pic->filename) }}">
                         </a>
                         {{ Form::open(['url' => 'admin/pictures/' . $pic->id, 'method' => 'DELETE', 'class'=>'picture-delete']) }}

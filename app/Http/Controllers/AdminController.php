@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\GameSession;
+use App\MatchingWord;
+use App\Tag;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -453,9 +455,19 @@ class AdminController extends Controller
 
     $pics = Pic::all();
 
+    $matchingTags = MatchingWord::all()->count();
+
+    $users = User::all()->count();
+
+    $tags = Tag::all()->count();
+
+    $pictures = Pic::all()->count();
+
+
+
 
     return view('admin.stats')
-        ->with('pics', $pics);
+        ->with('pics', $pics)->with('matchingTags', $matchingTags)->with('users', $users)->with('tags', $tags)->with('pictures', $pictures);
 
   }
 
@@ -465,8 +477,7 @@ class AdminController extends Controller
 
     $date = date('d-m-Y_h-i-s-a', time());
 
-    $fileText = "The output goes in form: picture filename; game session start; game session id; player1 id; 
-    player2 id; player1 tags; player1 tags timestamps; player 2 tags; player 2 timestamps; game session end\n\n";
+    $fileText = "The output goes in form: picture filename; game session start; game session id; player1 id; player2 id; player1 tags; player1 tags timestamps; player 2 tags; player 2 timestamps; game session end\n\n";
 
     $pics = Pic::all();
 
@@ -477,11 +488,14 @@ class AdminController extends Controller
         $fileText .= $pic->filename."; ".$gameSession->created_at."; ".$gameSession->id."; ".$gameSession->user->id."; ";
 
 
+        $competitorSession = null;
         if($gameSession->competitor_session_id != null){
           //Get competitor session
           $competitorSession = GameSession::find($gameSession->competitor_session_id);
 
-          $fileText .= $competitorSession->user->id;
+          $fileText .= $competitorSession->user->id."; ";
+        }else{
+          $fileText .= "NO PLAYER 2; ";
         }
 
 
@@ -489,17 +503,29 @@ class AdminController extends Controller
 
 
         //Player 1 tags
-        foreach ($tagStamps as $tagStamp){
-          $fileText .= $tagStamp->tag->tag."; ".$tagStamp->created_at."; ";
+
+        if($tagStamps != null && sizeof($tagStamps)>0){
+          foreach ($tagStamps as $tagStamp){
+            $fileText .= $tagStamp->tag->tag."; ".$tagStamp->created_at."; ";
+          }
+        }else{
+          $fileText .= "NO PLAYER 1 TAGS; ";
         }
+
+
 
         //Player 2 tags
         if(isset($competitorSession))
         {
           $competitorTagStamps = $competitorSession->tags;
+
+
+
           foreach ($competitorTagStamps as $competitorTagStamp){
-            $fileText .= $competitorTagStamps->tag->tag."; ".$competitorTagStamps->created_at."; ";
+            $fileText .= $competitorTagStamp->tag->tag."; ".$competitorTagStamp->created_at."; ";
           }
+        }else{
+          $fileText .= "NO PLAYER 2 TAGS; ";
         }
 
         $fileText .= $gameSession->updated_at.";\n";
@@ -515,7 +541,10 @@ class AdminController extends Controller
 
 
     $myName = "PictureLabellingGameStats_".$date.".txt";
-    $headers = ['Content-type'=>'text/plain', 'Author'=>Auth::user()->name, 'Content-Disposition'=>sprintf('attachment; filename="%s"', $myName), 'Content-Length'=>sizeof($fileText)];
+
+
+
+    $headers = ['Content-type'=>'text/plain', 'Author'=>Auth::user()->name, 'Content-Disposition'=>sprintf('attachment; filename="%s"', $myName), 'Content-Length'=>strlen($fileText)];
     return \Response::make($fileText, 200, $headers);
   }
 

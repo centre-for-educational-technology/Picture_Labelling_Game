@@ -19,23 +19,23 @@ use Illuminate\Support\Facades\Auth;
 class GameController extends Controller
 {
   /**
-   * Display a listing of the resource.
+   * Display game page
    *
    */
   public function index() {
 
     $user = Auth::user();
 
-//    $pic = Pic::orderByRaw("RAND()")->first();
+    $pic = Pic::orderByRaw("RAND()")->first();
 
-    $pic = Pic::where('id', '=', 13)->first();
+//    $pic = Pic::where('id', '=', 13)->first();
 
 
     //Get taboo words for that picture
     $matchingWordsList = $this->getTabooWords($pic);
 
 
-
+// Used if previous tags made by me for that picture do matter
 //    $mySessionsForThatPicture = $user->gameSessions()->where('pic_id', $pic->id)->get();
 //
 //    $myTags = array();
@@ -260,10 +260,8 @@ class GameController extends Controller
   }
 
   /**
-   * Update the specified resource in storage.
+   * Update the specified tag in storage.
    *
-   * @param  int  $id
-   * @return Response
    */
   public function update(Request $request, $id) {
     $tag = Tag::find($id);
@@ -276,7 +274,6 @@ class GameController extends Controller
   /**
    * Remove the tag
    *
-   * @param  int  $id
    */
   public function destroy(Request $request, $id) {
 
