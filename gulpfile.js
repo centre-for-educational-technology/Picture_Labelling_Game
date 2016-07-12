@@ -34,6 +34,12 @@ gulp.task("copyfiles", function() {
   gulp.src("bower_components/ngToast/dist/ngToast.js")
     .pipe(gulp.dest("resources/assets/js/"));
 
+  gulp.src("bower_components/angular-modal-service/dst/angular-modal-service.js")
+    .pipe(gulp.dest("resources/assets/js/"));
+
+  gulp.src("bower_components/angular-bootstrap/ui-bootstrap.js")
+    .pipe(gulp.dest("resources/assets/js/"));
+
 
 
 
@@ -63,7 +69,9 @@ elixir(function(mix) {
         'app.js',
         'angular-animate.js',
         'angular-sanitize.js',
-        'ngToast.js']
+        'ngToast.js',
+        'ui-bootstrap.js',
+        'angular-modal-service.js']
       )
 
       .version(['css/app.css','js/all.js']);

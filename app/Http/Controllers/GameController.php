@@ -28,7 +28,7 @@ class GameController extends Controller
 
     $pic = Pic::orderByRaw("RAND()")->first();
 
-//    $pic = Pic::where('id', '=', 13)->first();
+//    $pic = Pic::where('id', '=', 15)->first();
 
 
     //Get taboo words for that picture
@@ -73,7 +73,7 @@ class GameController extends Controller
 //      \Debugbar::info($secondPlayerName);
 
       //Get all tags from that user for that picture
-      $secondPlayerSessionTagsForThatPicture = $secondPlayerRandomSession->tags;
+//      $secondPlayerSessionTagsForThatPicture = $secondPlayerRandomSession->tags;
 
 //      \Debugbar::info($secondPlayerSessionTagsForThatPicture);
 
@@ -144,73 +144,43 @@ class GameController extends Controller
   
 
   /**
-   * Store a new tag
+   * Store new tags
    *
    */
   public function store(Request $request) {
-
-    //To lower case and remove spaces
-    $input_tag = str_replace(' ', '-', strtolower($request->input('tag')['tag']));
+    $input_tags = $request->input('tags');
 
 
-    //Check if input tag is not in the list of taboo words
-    $inTabooListFlag = false;
-    //Get taboo words for that picture
-    $pic = Pic::find($request->input('pic'));
-    $matchingWords = $this->getTabooWords($pic);
-
-
-
-    if(!empty($matchingWords)){
-
-      foreach ($matchingWords as $matchingWord){
-
-        if(strcmp($matchingWord, $input_tag)==0){
-          $inTabooListFlag = true;
-
-          return array('tag' => $input_tag, 'usedTagFlag' => false, 'matchingWordAddedFlag' => false, 'inTabooListFlag' => $inTabooListFlag);
-        }
-      }
-    }
-
-
-    //Check if there is already same tag in table
-    $similar_tag = Tag::where('tag', 'like', '%' . $input_tag . '%')->first();
-
-    $usedTagFlag=false;
 
     //Get my session
     $mySession = GameSession::find($request->input('my_session_id'));
+    $mySession->touch();
 
-
-    if($similar_tag != null && sizeof($similar_tag)>0){
-      $tag = $similar_tag;
-
-
-
-      //Check if this user already used this tag for this picture
-      $usedTag = $mySession->tags()->where('tag_id', '=', $similar_tag->id)->first();
-
-
-
-//      $usedTag = GameSession::where('tag_id', '=', $similar_tag->id)->where('user_id', '=', Auth::user()->id)->where('pic_id', '=', $request->input('pic'))->first();
-
-      if(!empty($usedTag)){
-        $usedTagFlag = true;
-      }
-
-    } else {
-      $tag = Tag::create(array(
-          'tag' => $input_tag,
-      ));
-      $usedTagFlag=false;
-    }
 
 
     $matchingWordAddedFlag = false;
 
-    if(!$usedTagFlag){
-      $mySession->touch();
+    $matchingWordsList = array();
+
+
+
+    foreach ($input_tags as $input_tag){
+
+      $input_tag = $input_tag['tag'];
+//      \Debugbar::info($input_tag);
+      //Check if there is already same tag in table
+      $similar_tag = Tag::where('tag', 'like', '%' . $input_tag . '%')->first();
+
+      if($similar_tag != null && sizeof($similar_tag)>0){
+        $tag = $similar_tag;
+
+      }else{
+        $tag = Tag::create(array(
+            'tag' => $input_tag,
+        ));
+      }
+
+
 
 
       $taggingStamp = TaggingStamp::create(array(
@@ -222,13 +192,10 @@ class GameController extends Controller
       $taggingStamp->save();
 
 
-
       //Get competitor session
-      $competitorSession = GameSession::find($mySession->competitor_session_id);
+      if($mySession->competitor_session_id != null){
 
-
-
-      if($competitorSession!=null){
+        $competitorSession = GameSession::find($mySession->competitor_session_id);
         //Get tags for that competitor session game
         $competitorTags = $competitorSession->tags;
 
@@ -247,57 +214,59 @@ class GameController extends Controller
 
             $matchingWordAddedFlag = true;
 
+            array_push($matchingWordsList, $tag);
+
           }
         }
 
       }
     }
 
+    return array('matchingWordAddedFlag' => $matchingWordAddedFlag, 'matchingWordsList' => $matchingWordsList);
 
 
 
-    return array('tag' => $tag, 'usedTagFlag' => $usedTagFlag, 'matchingWordAddedFlag' => $matchingWordAddedFlag, 'inTabooListFlag' => false);
   }
 
   /**
    * Update the specified tag in storage.
    *
    */
-  public function update(Request $request, $id) {
-    $tag = Tag::find($id);
-    $tag->tag = $request->input('tag');
-    $tag->save();
-
-    return $tag;
-  }
-
-  /**
-   * Remove the tag
-   *
-   */
-  public function destroy(Request $request, $id) {
-
-    //Get my session
-    $mySession = GameSession::find($request->input('my_session_id'));
-
-
-    $taggingStamp = TaggingStamp::where('tag_id', '=', $id)->where('game_session_id', '=', $mySession->id)->first();
-
-    \Debugbar::info($taggingStamp->id);
-
-    $matchingWord = MatchingWord::where('tagging_stamp_id', '=', $taggingStamp->id)->first();
-
-
-    $deleteFromMatchingWordsFlag = false;
-
-    if($matchingWord != null && sizeof($matchingWord)>0){
-      $matchingWord->delete();
-      $deleteFromMatchingWordsFlag = true;
-    }
-
-    $taggingStamp->delete();
-
-    return array('deleteFromMatchingWordsFlag' => $deleteFromMatchingWordsFlag);
-
-  }
+//  public function update(Request $request, $id) {
+//    $tag = Tag::find($id);
+//    $tag->tag = $request->input('tag');
+//    $tag->save();
+//
+//    return $tag;
+//  }
+//
+//  /**
+//   * Remove the tag
+//   *
+//   */
+//  public function destroy(Request $request, $id) {
+//
+//    //Get my session
+//    $mySession = GameSession::find($request->input('my_session_id'));
+//
+//
+//    $taggingStamp = TaggingStamp::where('tag_id', '=', $id)->where('game_session_id', '=', $mySession->id)->first();
+//
+//    \Debugbar::info($taggingStamp->id);
+//
+//    $matchingWord = MatchingWord::where('tagging_stamp_id', '=', $taggingStamp->id)->first();
+//
+//
+//    $deleteFromMatchingWordsFlag = false;
+//
+//    if($matchingWord != null && sizeof($matchingWord)>0){
+//      $matchingWord->delete();
+//      $deleteFromMatchingWordsFlag = true;
+//    }
+//
+//    $taggingStamp->delete();
+//
+//    return array('deleteFromMatchingWordsFlag' => $deleteFromMatchingWordsFlag);
+//
+//  }
 }

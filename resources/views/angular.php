@@ -6,13 +6,39 @@
   <div class="container">
     <div class="row">
 
+      <script type="text/ng-template" id="modal.html">
+        <div class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <button type="button" class="close" ng-click="close('Cancel')" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Your result</h4>
+              </div>
+              <div class="modal-body">
+
+
+                <div ng-if="tags != null">
+                  <p>Your matching words:</p>
+                  <ul>
+                    <li ng-repeat='tag in tags'><% tag.tag %></li>
+                  </ul>
+                  <p>that give you <% tags.length %> points</p>
+                </div>
+                <div ng-if="tags == null">
+                  <p>No matches this time :(</p>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" ng-click="close('Yes')" class="btn btn-default" data-dismiss="modal">Ok</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </script>
+
+
       <div class="jumbotron">
         <div class="container">
-
-
-
-
-
 
         <div class="container-fluid">
 
@@ -60,11 +86,11 @@
           <div class="col-sm-6">
 
               <div class="input-group input-group-lg my-tags">
-                  <input type="text" class="form-control" placeholder="Add tag..." ng-model="tag.tag">
+                  <input type="text" class="form-control" placeholder="Add tag..." ng-model="newTag.tag" ng-trim='false'>
                   <span class="input-group-btn">
                     <button class="btn btn-default" type="button" ng-click="addTag()"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> Add tag</button>
-                    <button type="button" class="btn btn-default" aria-label="Left Align" ng-click="reloadRoute()">
-                      <span class="glyphicon glyphicon-picture" aria-hidden="true"></span> Refresh image
+                    <button type="button" class="btn btn-default" aria-label="Left Align" ng-click="submitTags()">
+                      <span class="glyphicon glyphicon-picture" aria-hidden="true"></span> Submit and next
                     </button>
                   </span>
 
