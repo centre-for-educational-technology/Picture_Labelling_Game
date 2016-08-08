@@ -11,18 +11,18 @@ Application based on Laravel PHP Framework version 5.2.30
 
 ## Requirements
 
-- PHP 7.0 and higher
+* PHP 7.0 and higher
 
-- SSH enabled on server
+* SSH enabled on server
 
-- Composer
+* Composer
   
-  * Supports databases
-    * MySQL
-    * Postgres
-    * SQLite
-    * SQL Server
-    (Tested on MySQL 5.5)
+* Supports databases
+  * MySQL
+  * Postgres
+  * SQLite
+  * SQL Server
+  (Tested on MySQL 5.5)
   
 ## Installation 
 
