@@ -13,7 +13,7 @@
 
     <!-- Styles -->
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/labellinggame{{ elixir('css/app.css') }}" rel="stylesheet">
+    <link href="{{ url(elixir('css/app.css')) }}" rel="stylesheet">
 
     <style>
         body {
@@ -87,7 +87,7 @@
         </div>
     </nav>
 
-    <script src="/labellinggame{{ elixir('js/all.js') }}"></script>
+    <script src="{{ url(elixir('js/all.js')) }}"></script>
     @yield('content')
 
 

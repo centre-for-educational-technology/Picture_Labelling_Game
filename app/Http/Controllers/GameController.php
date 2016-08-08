@@ -30,9 +30,11 @@ class GameController extends Controller
 
 //    $pic = Pic::where('id', '=', 15)->first();
 
+    if($pic) {
 
-    //Get taboo words for that picture
-    $matchingWordsList = $this->getTabooWords($pic);
+
+      //Get taboo words for that picture
+      $matchingWordsList = $this->getTabooWords($pic);
 
 
 // Used if previous tags made by me for that picture do matter
@@ -55,57 +57,53 @@ class GameController extends Controller
 //    }
 
 
-
-    //Take random session for that picture and not by me
-    $secondPlayerRandomSession = GameSession::where('pic_id', '=', $pic->id)->where('user_id', '<>', Auth::user()->id)->distinct()->orderByRaw("RAND()")->first();
-
+      //Take random session for that picture and not by me
+      $secondPlayerRandomSession = GameSession::where('pic_id', '=', $pic->id)->where('user_id', '<>', Auth::user()->id)->distinct()->orderByRaw("RAND()")->first();
 
 
-    $secondPlayerName = "";
+      $secondPlayerName = "";
 
-    //Second player found
-    if ($secondPlayerRandomSession!=null && sizeof($secondPlayerRandomSession)>0){
+      //Second player found
+      if ($secondPlayerRandomSession != null && sizeof($secondPlayerRandomSession) > 0) {
 
 
-      $secondPlayerName = $secondPlayerRandomSession->user->name;
+        $secondPlayerName = $secondPlayerRandomSession->user->name;
 
 
 //      \Debugbar::info($secondPlayerName);
 
-      //Get all tags from that user for that picture
+        //Get all tags from that user for that picture
 //      $secondPlayerSessionTagsForThatPicture = $secondPlayerRandomSession->tags;
 
 //      \Debugbar::info($secondPlayerSessionTagsForThatPicture);
 
 
+        //Create a new session
+        $myGameSession = GameSession::create(array(
+            'user_id' => $user->id,
+            'competitor_session_id' => $secondPlayerRandomSession->id,
+            'pic_id' => $pic->id,
+        ));
 
-      //Create a new session
-      $myGameSession = GameSession::create(array(
-          'user_id' => $user->id,
-          'competitor_session_id' => $secondPlayerRandomSession->id,
-          'pic_id' => $pic->id,
-      ));
 
+        $myGameSession->save();
+
+
+      } else {
+
+        $secondPlayerName = "you are the first one to tag this picture";
+
+        //Create a new session
+        $myGameSession = GameSession::create(array(
+            'user_id' => $user->id,
+            'competitor_session_id' => null,
+            'pic_id' => $pic->id,
+        ));
+
+
+      }
 
       $myGameSession->save();
-
-
-    }else{
-
-      $secondPlayerName = "you are the first one to tag this picture";
-
-      //Create a new session
-      $myGameSession = GameSession::create(array(
-          'user_id' => $user->id,
-          'competitor_session_id' => null,
-          'pic_id' => $pic->id,
-      ));
-
-
-    }
-
-    $myGameSession->save();
-
 
 
 //    \Debugbar::info($matchingWordsList);
@@ -116,8 +114,11 @@ class GameController extends Controller
 //    \Debugbar::info($myTags);
 
 
-    return array('my_session_id' => $myGameSession->id, 'second_player' => $secondPlayerName, 'matching_words_list' => $matchingWordsList, 'pic' => array('id'=> $pic->id, 'url'=> asset('pictures/'.$pic->filename)));
+      return array('my_session_id' => $myGameSession->id, 'second_player' => $secondPlayerName, 'matching_words_list' => $matchingWordsList, 'pic' => array('id' => $pic->id, 'url' => asset('pictures/' . $pic->filename)), 'no_pictures_flag' => false);
 
+    }else{
+      return array('no_pictures_flag' => true);
+    }
 
   }
 

@@ -37,7 +37,7 @@
       </script>
 
 
-      <div class="jumbotron">
+      <div class="jumbotron" ng-if="no_pictures_flag==false">
         <div class="container">
 
         <div class="container-fluid">
@@ -48,7 +48,7 @@
             <div class="col-md-8 col-md-offset-2">
               <div class="card">
                 <div class="card-image">
-                  <img class="img-responsive" src="<% pic.url %>">
+                  <img class="img-responsive" ng-src="<% pic.url %>">
 
                 </div><!-- card image -->
 
@@ -90,7 +90,7 @@
                   <span class="input-group-btn">
                     <button class="btn btn-default" type="button" ng-click="addTag()"><span class="glyphicon glyphicon-tag" aria-hidden="true"></span> Add tag</button>
                     <button type="button" class="btn btn-default" aria-label="Left Align" ng-click="submitTags()">
-                      <span class="glyphicon glyphicon-picture" aria-hidden="true"></span> Submit and next
+                      <span class="glyphicon glyphicon-hand-right" aria-hidden="true"></span> Submit and next
                     </button>
                   </span>
 
@@ -136,6 +136,8 @@
 
 
       </div>
+
+      <div class="alert alert-danger" ng-if="no_pictures_flag==true" role="alert">Please add pictures to the game. Only admin can add pictures</div>
 
 
     </div>

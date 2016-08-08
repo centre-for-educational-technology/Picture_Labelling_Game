@@ -14,6 +14,8 @@ app.config(['ngToastProvider', function(ngToastProvider) {
 
 app.controller('TagController', function($scope, $http, ngToast, $animate, $window, $filter, ModalService) {
 
+  var apiUrl = window.apiUrl;
+
   $scope.tags = [];
   $scope.picture = [];
 
@@ -25,19 +27,22 @@ app.controller('TagController', function($scope, $http, ngToast, $animate, $wind
 
   var spinner = document.getElementById('my_spinner');
 
-  console.log(spinner);
-
   $animate.enabled(spinner, false);
 
   $scope.init = function() {
 
-    $http.get('/labellinggame/api/game').
+    $http.get(apiUrl).
     success(function(data, status, headers, config) {
       // Notification.error({message: 'Error notification 1s', delay: 1000});
-      $scope.my_session_id = data.my_session_id;
-      $scope.second_player = data.second_player;
-      $scope.matching_words = data.matching_words_list;
-      $scope.pic = data.pic;
+      if(data.no_pictures_flag == false) {
+        $scope.no_pictures_flag = false;
+        $scope.my_session_id = data.my_session_id;
+        $scope.second_player = data.second_player;
+        $scope.matching_words = data.matching_words_list;
+        $scope.pic = data.pic;
+      }else{
+        $scope.no_pictures_flag = true;
+      }
       $scope.loading = false;
 
     });
@@ -95,7 +100,7 @@ app.controller('TagController', function($scope, $http, ngToast, $animate, $wind
 
   $scope.submitTags = function() {
 
-    $http.post('/labellinggame/api/game', {
+    $http.post(apiUrl, {
       tags: $scope.tags,
       pic: $scope.pic.id,
       my_session_id: $scope.my_session_id
@@ -173,7 +178,7 @@ app.controller('ModalController', function($scope, tags, close) {
 
   $scope.tags = tags;
 
-  console.log($scope.tags);
+  // console.log($scope.tags);
 
   $scope.close = function(result) {
     close(result, 500); // close, but give 500ms for bootstrap to animate

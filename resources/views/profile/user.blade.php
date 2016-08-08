@@ -26,31 +26,37 @@
                     </div>
                 </div>
 
+                @if(count($my_matches) > 0 )
 
-                @foreach ($my_matches as $match)
                     <div class="panel panel-info">
                         <div class="panel-heading">Your matches</div>
                         <ul class="list-group">
+                            @foreach ($my_matches as $match)
                             <li class="list-group-item">
                                 <p>You played against {{ $match[0] }} on {{ $match[2] }} and got 1 point for the tag "{{ $match[1] }}".</p>
                             </li>
+                            @endforeach
                         </ul>
                     </div>
 
-                @endforeach
+
+                @endif
 
 
-                @foreach ($others_matches as $match)
+
+                @if(count($others_matches) > 0)
                     <div class="panel panel-info">
                         <div class="panel-heading">Matches against you</div>
                         <ul class="list-group">
+                            @foreach ($others_matches as $match)
                             <li class="list-group-item">
                                 <p>{{ $match[0] }} played against you on {{ $match[2] }} and you both got 1 point for the tag "{{ $match[1] }}".</p>
                             </li>
+                            @endforeach
                         </ul>
                     </div>
 
-                @endforeach
+                @endif
             </div>
         </div>
     </div>
