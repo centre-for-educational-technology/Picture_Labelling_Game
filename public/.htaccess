@@ -9,7 +9,7 @@
 
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
-    # XXX Add base back on slash magic
+    # XXX Add base back on slash magic, not present in original
     # RewriteRule ^(.*)/$ /labellinggame/$1 [L,R=301]
     #RewriteRule ^(.*)/$ /$1 [L,R=301]
 

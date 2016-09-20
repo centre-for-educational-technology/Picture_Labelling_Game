@@ -48,9 +48,7 @@ gulp.task("copyfiles", function() {
 
   gulp.src("bower_components/ngToast/dist/ngToast-animations.css")
     .pipe(gulp.dest("resources/assets/sass/"));
-
-  gulp.src("resources/assets/bg/1.jpg")
-    .pipe(gulp.dest("public/build/bg"));
+  
 });
 
 

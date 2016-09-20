@@ -1,5 +1,7 @@
 # Picture Labelling Game 
 
+Version 1.1.1
+
 ## About 
 
 1. Get a random picture from the library
@@ -30,20 +32,57 @@ Application based on Laravel PHP Framework version 5.2.30
 
 Run `composer install` command in the root folder of the project.
 
-### 2. Import the database scheme
+### 2. Edit the configuration file (incl. database configuration)
+
+`.env.example` and change its name to `.env`
+
+### 3. Make sure `.htaccess` file in `public` directory and server config files are configured correctly
+
+#### Example of my .htaccess
+
+```
+<IfModule mod_rewrite.c>
+    <IfModule mod_negotiation.c>
+        Options -MultiViews
+    </IfModule>
+
+    RewriteEngine On
+    # XXX Not present in original
+     RewriteBase /labellinggame
+
+    # Redirect Trailing Slashes If Not A Folder...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    # XXX Add base back on slash magic, not present in original
+    RewriteRule ^(.*)/$ /labellinggame/$1 [L,R=301]
+    #RewriteRule ^(.*)/$ /$1 [L,R=301]
+
+    # Handle Front Controller...
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteRule ^ index.php [L]
+
+    # Handle Authorization Header
+    RewriteCond %{HTTP:Authorization} .
+    RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+</IfModule>
+```
+
+### 4. Import the database scheme
 
 Run `artisan migrate` to create database tables
-
-### 3. Edit the configuration file
-
-`.env.example` 
-
-### 4. Make sure `.htaccess` file in `public` directory and server config files are configured correctly
 
 ## Post-installation procedures
 
 Register a new user. The first user of the system is admin by default. Admin should upload pictures to start using the game. 
 
 ## Development
+
+ Use
  
-Use `gulp copyfiles` and `gulp` commands to build `.js` and `.css`  files  
+```
+bower install
+gulp copyfiles
+gulp
+```
+
+commands to build `.js` and `.css`  files  
