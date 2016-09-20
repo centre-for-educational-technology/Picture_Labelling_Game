@@ -67,13 +67,15 @@ Run `composer install` command in the root folder of the project.
 </IfModule>
 ```
 
-### 4. Import the database scheme
+### 4. Import the database scheme and default pictures
 
 Run `artisan migrate` to create database tables
 
+Run `php artisan db:seed` to add default pictures
+
 ## Post-installation procedures
 
-Register a new user. The first user of the system is admin by default. Admin should upload pictures to start using the game. 
+Register a new user. The first user of the system is admin by default. Admin can upload pictures, view and get statistics. 
 
 ## Development
 
