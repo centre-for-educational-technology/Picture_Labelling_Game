@@ -48,7 +48,7 @@ Run `composer install` command in the root folder of the project.
 
     RewriteEngine On
     # XXX Not present in original
-     RewriteBase /labellinggame
+    RewriteBase /labellinggame
 
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d

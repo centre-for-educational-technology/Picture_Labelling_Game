@@ -5,11 +5,11 @@
     <div class="row">
         <div class="col-md-10 col-md-offset-1">
             <div class="panel panel-default">
-                <div class="panel-heading">Welcome</div>
+                <div class="panel-heading">
+                    <h1 class="text-center"><i class='glyphicon glyphicon-bullhorn'></i> How to play</h1>
+                </div>
 
                 <div class="panel-body">
-                    <h1 class="text-center"><i class='glyphicon glyphicon-bullhorn'></i> How to play</h1>
-
 
                     <ul class="list-group">
                         <li class="list-group-item list-group-item-warning"><h3><span class="glyphicon glyphicon-picture"></span>1. Get a random picture from our library</h3></li>
